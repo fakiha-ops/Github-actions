@@ -38,10 +38,10 @@ jobs:
 
       - name: Copy files to second branch
         run: |
-          cp -r ../.github/SourceFolder/* .github/SourceFolder/
+          cp -r ../SourceFolder/* ../SourceFolder/
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add .github/SourceFolder
+          git add ../SourceFolder
           git commit -m "Copied files from main to second"
           git push
 
