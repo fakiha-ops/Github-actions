@@ -1,4 +1,4 @@
-name: Copy Files to Second Branch
+name: Copy Files to Second Branchs
 
 on:
   push:
