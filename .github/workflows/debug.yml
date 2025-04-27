@@ -1,0 +1,4 @@
+- name: Debug Source Folder
+  run: |
+    ls -al .github/
+    ls -al .github/SourceFolder/
