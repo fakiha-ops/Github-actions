@@ -17,7 +17,7 @@ jobs:
       - name: Check if source folder exists
         id: check_folder
         run: |
-          if [ -d .github/SourceFolder ]; then
+          if [ -d ../SourceFolder ]; then
             echo "Folder exists"
             echo "::set-output name=exists::true"
           else
@@ -32,8 +32,8 @@ jobs:
 
       - name: Ensure target folder exists
         run: |
-          if [ ! -d .github/SourceFolder ]; then
-            mkdir -p .github/SourceFolder
+          if [ ! -d ../SourceFolder ]; then
+            mkdir -p ../SourceFolder
           fi
 
       - name: Copy files to second branch
