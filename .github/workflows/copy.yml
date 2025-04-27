@@ -1,4 +1,4 @@
-name: Copy Files to Second Branchs
+name: Copy Files to Second Branch
 
 on:
   push:
@@ -8,41 +8,32 @@ on:
 jobs:
   copy-files:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout main branch
+      - name: Checkout both branches
         uses: actions/checkout@v3
         with:
-          ref: main
+          fetch-depth: 0  # Fetch all history so we can switch branches
 
-      - name: Check if source folder exists
-        id: check_folder
+      - name: Copy files from main to second
         run: |
-          if [ -d ../SourceFolder ]; then
-            echo "Folder exists"
-            echo "::set-output name=exists::true"
-          else
-            echo "Folder does not exist"
-            echo "::set-output name=exists::false"
-          fi
-
-      - name: Checkout second branch
-        uses: actions/checkout@v3
-        with:
-          ref: second  # Updated branch name
-
-      - name: Ensure target folder exists
-        run: |
-          if [ ! -d ../SourceFolder ]; then
-            mkdir -p ../SourceFolder
-          fi
-
-      - name: Copy files to second branch
-        run: |
-          cp -r ../SourceFolder/* ../SourceFolder/
+          # Configure Git
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add ../SourceFolder
-          git commit -m "Copied files from main to second"
-          git push
 
+          # Save current branch (main)
+          CURRENT_BRANCH=$(git branch --show-current)
 
+          # Copy the file we want to move
+          cp SourceFolder/sourceFile.xml /tmp/sourceFile.xml
+
+          # Switch to second branch
+          git checkout second
+
+          # Copy the file into place
+          cp /tmp/sourceFile.xml SourceFolder/sourceFile.xml
+
+          # Add, commit and push changes
+          git add SourceFolder/sourceFile.xml
+          git commit -m "Copied sourceFile.xml from $CURRENT_BRANCH to second"
+          git push origin second
