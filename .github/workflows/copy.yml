@@ -14,13 +14,13 @@ jobs:
         with:
           ref: main
 
-      - name: Copy file to test branch
+      - name: Copy file to second branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git checkout test
+          git checkout second
           cp .github/SourceFolder/sourceFile.xml .github/SourceFolder/sourceFile.xml
           git add .github/SourceFolder/sourceFile.xml
-          git commit -m "Copied sourceFile.xml from main to test branch"
-          git push origin test
+          git commit -m "Copied sourceFile.xml from main to second branch"
+          git push origin second
 
