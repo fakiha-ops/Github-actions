@@ -1,26 +1,48 @@
-name: Copy File Between Branches
+name: Copy Files to Second Branch
 
 on:
   push:
     branches:
-      - main
+      - main  # Trigger when changes are pushed to main
 
 jobs:
-  copy-file:
+  copy-files:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout main branch
         uses: actions/checkout@v3
         with:
           ref: main
 
-      - name: Copy file to second branch
+      - name: Check if source folder exists
+        id: check_folder
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git checkout second
-          cp .github/SourceFolder/sourceFile.xml .github/SourceFolder/sourceFile.xml
-          git add .github/SourceFolder/sourceFile.xml
-          git commit -m "Copied sourceFile.xml from main to second branch"
-          git push origin second
+          if [ -d .github/SourceFolder ]; then
+            echo "Folder exists"
+            echo "::set-output name=exists::true"
+          else
+            echo "Folder does not exist"
+            echo "::set-output name=exists::false"
+          fi
+
+      - name: Checkout second branch
+        uses: actions/checkout@v3
+        with:
+          ref: second-branch
+
+      - name: Ensure target folder exists
+        run: |
+          if [ ! -d .github/SourceFolder ]; then
+            mkdir -p .github/SourceFolder
+          fi
+
+      - name: Copy files to second branch
+        run: |
+          cp -r ../.github/SourceFolder/* .github/SourceFolder/
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .github/SourceFolder
+          git commit -m "Copied files from main to second-branch"
+          git push
+
 
