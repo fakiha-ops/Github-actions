@@ -1,39 +1,42 @@
-name: Copy Files to Second Branch
+name: Copy File to Second Branch
 
 on:
   push:
     branches:
-      - main  # Trigger when changes are pushed to main
+      - main
 
 jobs:
-  copy-files:
+  copy-file:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout both branches
+      - name: Checkout all branches
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch all history so we can switch branches
+          fetch-depth: 0  # Needed to checkout other branches
 
-      - name: Copy files from main to second
+      - name: Copy file from main to second branch
         run: |
           # Configure Git
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-          # Save current branch (main)
+          # Save current branch
           CURRENT_BRANCH=$(git branch --show-current)
 
-          # Copy the file we want to move
-          cp SourceFolder/sourceFile.xml /tmp/sourceFile.xml
+          # Copy the source file temporarily
+          cp .github/SourceFolder/sourceFile.xml /tmp/sourceFile.xml
 
           # Switch to second branch
           git checkout second
 
-          # Copy the file into place
-          cp /tmp/sourceFile.xml SourceFolder/sourceFile.xml
+          # Ensure the folder exists (optional safety)
+          mkdir -p .github/SourceFolder
 
-          # Add, commit and push changes
-          git add SourceFolder/sourceFile.xml
+          # Copy the file into the folder
+          cp /tmp/sourceFile.xml .github/SourceFolder/sourceFile.xml
+
+          # Git add, commit and push
+          git add .github/SourceFolder/sourceFile.xml
           git commit -m "Copied sourceFile.xml from $CURRENT_BRANCH to second"
           git push origin second
