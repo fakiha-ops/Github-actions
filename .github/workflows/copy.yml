@@ -28,7 +28,7 @@ jobs:
       - name: Checkout second branch
         uses: actions/checkout@v3
         with:
-          ref: second-branch
+          ref: second  # Updated branch name
 
       - name: Ensure target folder exists
         run: |
@@ -42,7 +42,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add .github/SourceFolder
-          git commit -m "Copied files from main to second-branch"
+          git commit -m "Copied files from main to second"
           git push
 
 
